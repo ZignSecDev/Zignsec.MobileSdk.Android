@@ -1,20 +1,12 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Zignsec.MobileSdk.iOS
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+Mobile SDK for Online Document Scanning and Liveness through Zignsec. 
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Usage
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+1. Through your Backend, obtain an Access Token and Session ID By calling the ZignSec API Endpoint  https://test-gateway.zignsec.com/core/api/sessions/scanning/mobile (for Test Sessions) or https://gateway.zignsec.com/core/api/sessions/scanning/mobile for production Sessions. 
+1. Transport the Access Token and Session ID from your backend to the Mobile App. 
+1. Create a ZignSecIdentificationCompletion callback to handle results of the sessions.
+1. Create a ZignSecIdentificationActivity, providing the Zignsec Environment (Test or Prod) together with the session id and access token which your backend would have obtained through the ZignSec API.
+1. Call startIdentification on the instance created in (b), passing the context and completion function created in (a). This will render the camera to the user and ask him/her to perform the desired actions (as triggered by the backend in the initial call). On completion your callback will be called with the results of the session.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)

@@ -1,0 +1,33 @@
+# Gradle files
+Zignsec.Mobile.Sdk.Android/.gradle/
+Zignsec.Mobile.Sdk.Android/build/
+
+# Local configuration file (sdk path, etc)
+Zignsec.Mobile.Sdk.Android/local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+Zignsec.Mobile.Sdk.Android/captures/
+Zignsec.Mobile.Sdk.Android/.externalNativeBuild/
+Zignsec.Mobile.Sdk.Android/.cxx/
+*.apk
+Zignsec.Mobile.Sdk.Android/output.json
+
+# IntelliJ
+Zignsec.Mobile.Sdk.Android/*.iml
+Zignsec.Mobile.Sdk.Android/.idea/
+Zignsec.Mobile.Sdk.Android/misc.xml
+Zignsec.Mobile.Sdk.Android/deploymentTargetDropDown.xml
+Zignsec.Mobile.Sdk.Android/render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+Zignsec.Mobile.Sdk.Android/google-services.json
+
+# Android Profiling
+*.hprof

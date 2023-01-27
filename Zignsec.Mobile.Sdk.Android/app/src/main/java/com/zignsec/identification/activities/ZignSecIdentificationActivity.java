@@ -1,4 +1,4 @@
-package com.zignsec.identification.mobilesdk.activities;
+package com.zignsec.identification.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,25 +11,31 @@ import com.regula.documentreader.api.enums.OnlineMode;
 import com.regula.documentreader.api.enums.Scenario;
 import com.regula.documentreader.api.params.OnlineProcessingConfig;
 import com.regula.facesdk.FaceSDK;
-import com.zignsec.identification.mobilesdk.callbacks.ZignSecIdentificationCompletion;
-import com.zignsec.identification.mobilesdk.enums.ZignSecEnvironment;
-import com.zignsec.identification.mobilesdk.enums.ZignSecIdentificationOptions;
-import com.zignsec.identification.mobilesdk.internal.ZignSecDocumentReaderCompletion;
+import com.zignsec.identification.internal.ZignSecDocumentReaderCompletion;
+import com.zignsec.identification.enums.ZignSecEnvironment;
+import com.zignsec.identification.callbacks.ZignSecIdentificationCompletion;
 
 import java.net.HttpURLConnection;
 
 public class ZignSecIdentificationActivity extends Activity {
     private com.regula.documentreader.api.listener.NetworkInterceptorListener documentReaderInterceptorListener;
     private com.regula.facesdk.listener.NetworkInterceptorListener faceSdkInterceptorListener;
-    private ZignSecIdentificationOptions option;
-
     private ZignSecEnvironment environment;
 
-    public ZignSecIdentificationActivity(ZignSecEnvironment environment, ZignSecIdentificationOptions option, String accessToken) {
+    private String sessionId;
+    private String accessToken;
+
+    public ZignSecIdentificationActivity(ZignSecEnvironment environment, String sessionId, String accessToken) {
+
+        this.sessionId = sessionId;
+
+        this.accessToken = accessToken;
+
         this.documentReaderInterceptorListener = new com.regula.documentreader.api.listener.NetworkInterceptorListener() {
             @Override
             public void onPrepareRequest(HttpURLConnection httpURLConnection) {
                 httpURLConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+                httpURLConnection.setRequestProperty("x-zignsec-session-id", sessionId);
             }
         };
 
@@ -37,36 +43,25 @@ public class ZignSecIdentificationActivity extends Activity {
             @Override
             public void onPrepareRequest(HttpURLConnection httpURLConnection) {
                 httpURLConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+                httpURLConnection.setRequestProperty("x-zignsec-session-id", sessionId);
             }
         };
 
         this.environment = environment;
-        this.option = option;
 
         this.setup();
     }
 
-    public String getBaseUrl() {
-        if (environment == ZignSecEnvironment.DEV) {
-            return "https://dev-gateway.zignsec.com";
-        }
-        else if (environment == ZignSecEnvironment.TEST) {
-            return "https://test-gateway.zignsec.com";
-        } else {
-            return "https://gateway.zignsec.com";
-        }
-    }
-
     @SuppressLint("MissingPermission")
     public void startIdentification(@NonNull Context context, @NonNull ZignSecIdentificationCompletion completion) {
-        ZignSecDocumentReaderCompletion zsCompletion = new ZignSecDocumentReaderCompletion(context, option, completion);
+        ZignSecDocumentReaderCompletion zsCompletion = new ZignSecDocumentReaderCompletion(context, this.sessionId, completion, this.environment, this.accessToken);
 
         DocumentReader.Instance().showScanner(context, zsCompletion);
     }
 
     private void setup() {
         OnlineProcessingConfig onlineProcessingConfiguration = new OnlineProcessingConfig.Builder(OnlineMode.MANUAL)
-                .setUrl(getBaseUrl() + "/proxy/docs")
+                .setUrl(ZignSecEnvironment.getBaseUrl(this.environment) + "/proxy/docs")
                 .setNetworkInterceptorListener(documentReaderInterceptorListener)
                 .build();
 
@@ -78,6 +73,6 @@ public class ZignSecIdentificationActivity extends Activity {
 
         FaceSDK.Instance().setNetworkInterceptorListener(faceSdkInterceptorListener);
 
-        FaceSDK.Instance().setServiceUrl(getBaseUrl() + "/regula/faceapi");
+        FaceSDK.Instance().setServiceUrl(ZignSecEnvironment.getBaseUrl(this.environment) + "/proxy/faceapi");
     }
 }

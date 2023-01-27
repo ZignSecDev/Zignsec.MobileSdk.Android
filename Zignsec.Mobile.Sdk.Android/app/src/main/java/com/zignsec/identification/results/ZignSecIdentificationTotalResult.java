@@ -1,4 +1,4 @@
-package com.zignsec.identification.mobilesdk.results;
+package com.zignsec.identification.results;
 
 public enum ZignSecIdentificationTotalResult {
     ACCEPTED,

@@ -1,4 +1,4 @@
-package com.zignsec.identification.mobilesdk.results;
+package com.zignsec.identification.results;
 
 import com.regula.documentreader.api.results.DocumentReaderResults;
 import com.regula.facesdk.model.results.LivenessResponse;

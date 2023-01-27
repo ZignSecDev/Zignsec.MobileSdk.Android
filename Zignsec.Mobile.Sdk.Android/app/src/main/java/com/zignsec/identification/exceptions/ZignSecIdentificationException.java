@@ -1,4 +1,4 @@
-package com.zignsec.identification.mobilesdk.exceptions;
+package com.zignsec.identification.exceptions;
 
 public class ZignSecIdentificationException extends Exception{
     Exception innerException;
