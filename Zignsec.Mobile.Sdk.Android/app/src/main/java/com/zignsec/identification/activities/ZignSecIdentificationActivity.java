@@ -56,6 +56,7 @@ public class ZignSecIdentificationActivity extends Activity {
     public void startIdentification(@NonNull Context context, @NonNull ZignSecIdentificationCompletion completion) {
         ZignSecDocumentReaderCompletion zsCompletion = new ZignSecDocumentReaderCompletion(context, this.sessionId, completion, this.environment, this.accessToken);
 
+        DocumentReader.Instance().customization().edit().setShowBackgroundMask(true).apply();
         DocumentReader.Instance().showScanner(context, zsCompletion);
     }
 
@@ -64,8 +65,13 @@ public class ZignSecIdentificationActivity extends Activity {
                 .setUrl(ZignSecEnvironment.getBaseUrl(this.environment) + "/proxy/docs")
                 .setNetworkInterceptorListener(documentReaderInterceptorListener)
                 .build();
+        
+        DocumentReader.Instance().functionality().edit().setManualMultipageMode(true).apply();
+        DocumentReader.Instance().processParams().multipageProcessing = false;
 
-        onlineProcessingConfiguration.getProcessParam().setScenario(Scenario.SCENARIO_FULL_PROCESS);
+        DocumentReader.Instance().startNewSession();
+
+        onlineProcessingConfiguration.getProcessParam().setScenario(Scenario.SCENARIO_FULL_AUTH);
 
         DocumentReader.Instance().functionality().edit()
                 .setOnlineProcessingConfiguration(onlineProcessingConfiguration)

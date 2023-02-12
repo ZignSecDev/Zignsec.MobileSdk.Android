@@ -1,5 +1,6 @@
 package com.zignsec.identification.internal;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Base64;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.regula.documentreader.api.DocumentReader;
 import com.regula.documentreader.api.completions.IDocumentReaderCompletion;
 import com.regula.documentreader.api.enums.DocReaderAction;
 import com.regula.documentreader.api.errors.DocumentReaderException;
@@ -103,12 +105,7 @@ public class ZignSecDocumentReaderCompletion implements IDocumentReaderCompletio
             return objectMapper.readValue(json, ZignSecIdentificationSessionResponse.class);
     }
 
-    private ZignSecIdentificationSessionResult getZignSecIdentificationSessionResultFromJson(String json) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper.readValue(json, ZignSecIdentificationSessionResult.class);
-    }
-
+    @SuppressLint("MissingPermission")
     @Override
     public void onCompleted(int action, @Nullable DocumentReaderResults documentReaderResults, @Nullable DocumentReaderException e)
         {
@@ -117,6 +114,16 @@ public class ZignSecDocumentReaderCompletion implements IDocumentReaderCompletio
             }
 
             if (action == DocReaderAction.COMPLETE) {
+
+           if (documentReaderResults.morePagesAvailable != 0) {
+               DocumentReader.Instance().startNewPage();
+               DocumentReader.Instance().customization().edit().setResultStatus("A Two-Sided document has been detected. Please take a photo of the other side.").apply();
+               DocumentReader.Instance().customization().edit().setStatusTextSize(20).apply();
+
+
+               DocumentReader.Instance().showScanner(this.context, this);
+                    return;
+                }
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
