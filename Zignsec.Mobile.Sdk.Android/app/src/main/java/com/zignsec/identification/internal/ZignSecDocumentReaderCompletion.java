@@ -109,21 +109,21 @@ public class ZignSecDocumentReaderCompletion implements IDocumentReaderCompletio
     @Override
     public void onCompleted(int action, @Nullable DocumentReaderResults documentReaderResults, @Nullable DocumentReaderException e)
         {
+            DocumentReader.Instance().customization().edit().setShowStatusMessages(false).apply();
+            
             if (e != null) {
                 completion.onCompleted(null, new ZignSecIdentificationException(e));
             }
 
             if (action == DocReaderAction.COMPLETE) {
 
-           if (documentReaderResults.morePagesAvailable != 0) {
-               DocumentReader.Instance().startNewPage();
-               DocumentReader.Instance().customization().edit().setResultStatus("A Two-Sided document has been detected. Please take a photo of the other side.").apply();
-               DocumentReader.Instance().customization().edit().setStatusTextSize(20).apply();
-
-
-               DocumentReader.Instance().showScanner(this.context, this);
-                    return;
-                }
+                if (documentReaderResults.morePagesAvailable != 0) {
+                    DocumentReader.Instance().startNewPage();
+                    DocumentReader.Instance().customization().edit().setResultStatus("A Two-Sided document has been detected. Please take a photo of the other side.").apply();
+                    DocumentReader.Instance().customization().edit().setStatusTextSize(20).apply();
+                    DocumentReader.Instance().showScanner(this.context, this);
+                        return;
+                    }
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
