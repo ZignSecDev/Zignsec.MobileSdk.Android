@@ -109,8 +109,8 @@ public class ZignSecDocumentReaderCompletion implements IDocumentReaderCompletio
     @Override
     public void onCompleted(int action, @Nullable DocumentReaderResults documentReaderResults, @Nullable DocumentReaderException e)
         {
-            DocumentReader.Instance().customization().edit().setShowStatusMessages(false).apply();
-            
+            DocumentReader.Instance().customization().edit().setResultStatus(null).apply();
+
             if (e != null) {
                 completion.onCompleted(null, new ZignSecIdentificationException(e));
             }
